@@ -1,7 +1,7 @@
-import mongoose , {Schema, schema} from "mongoose";
+import mongoose , {Schema} from "mongoose";
 import  Jwt  from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const userSchema = new schema(
+const userSchema = new Schema(
     {
         username:{
             type:String,
@@ -31,7 +31,7 @@ const userSchema = new schema(
         coverimage:{
             type:String, //cloudnary url
         },
-        watchhistory:[
+        watchHistory:[
             {
                 type:Schema.Types.ObjectId,
                 ref:"video"  
@@ -51,7 +51,7 @@ const userSchema = new schema(
 
 userSchema.pre("save",async function(next){
     if(!this.isModified("password")) return next();
-    this.password = bcrypt.hash(this.password, 8)
+    this.password = await bcrypt.hash(this.password, 8)
     next()
 })
 
@@ -86,4 +86,4 @@ userSchema.methods.generateRefreshToken = function(){
         )
 }
 
-export const user = mongoose.model("User",userSchema);
+export const User = mongoose.model("User",userSchema);
